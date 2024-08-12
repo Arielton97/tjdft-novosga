@@ -24,6 +24,7 @@
 `sudo dnf install https://rpms.remirepo.net/enterprise/remi-release-9.rpm`
 ## Step 4: Install PHP 8.3 in RHEL
 `sudo dnf module install php:remi-8.3`
+
 `php -v`
 ## Step 5: Install Additiona PHP Extensions (Optional)
 `sudo dnf search php-*`

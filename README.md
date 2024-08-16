@@ -1,3 +1,4 @@
+Este arquivo tem permissão 006 para leitura e gravação
 ## Install webserver apache2
 `sudo yum update httpd`
 
@@ -16,17 +17,17 @@
 ## Install php v. 8.3
 ### Step 1: Update System Packages
 `sudo dnf update`
-### Step 2: Enable EPEL repository in RHEL 
+### Step 2: Habilitar os repositórios EPEL para o RHEL 
 `sudo subscription-manager repos --enable codeready-builder-for-rhel-9-$(arch)-rpms`
 
 `sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm`
-### Step 3: Enable Remi Repository in RHEL
+### Step 3: Habilitar os repositorios Remi para o RHEL
 `sudo dnf install https://rpms.remirepo.net/enterprise/remi-release-9.rpm`
-### Step 4: Install PHP 8.3 in RHEL
+### Step 4: Instalar PHP 8.3 para o RHEL
 `sudo dnf module install php:remi-8.3`
 
 `php -v`
-### Step 5: Install Additions PHP Extensions (Optional)
+### Step 5: Instalar extensões PHP adicionais (Opcional)
 `sudo dnf search php-*`
 
 `sudo dnf install php-gd php-xml`
@@ -34,36 +35,44 @@
 `sudo systemctl restart httpd`
 
 ## Instalando MySQL no Linux usando o repositório MySQL Yum
-### Adicionando Repositório MySQL Yum 
-a. Vá para a página Baixar o repositório MySQL Yum (https://dev.mysql.com/downloads/repo/yum/) na zona do desenvolvedor do MySQL.
-b. Seleciona e baixe o pacote ed lançamento para a sua plataforma.
-c. Instale o pacote de versão baixado com o comando a seguir, substituindo platform-and-version-specific-package-name pelo nome do pacote baixado.
-`$> sudo yum install platform-and-version-specific-package-name.rpm`
+### Adicionar Repositório MySQL Yum 
+a. Baixar o repositório MySQL Yum (https://dev.mysql.com/downloads/repo/yum/) ou (https://repo.mysql.com/mysql84-community-release-el9-1.noarch.rpm) para a pasta Downloads.
+`wget https://repo.mysql.com/mysql84-community-release-el9-1.noarch.rpm`
 
-ou baixe do mediafire
-[repository-mysql-comunity-rpm](https://download1588.mediafire.com/yu2cm5731bhgLFpQJhDTO90MOKUzspzuKJOK6ynH8D6l3uXes4NeylcaqpjGmYRiKBaCZgzDY3Urdu2xV5J7FscJHbzLegEhUhAZ-qcFIamtg6P6b0XnU_MkHQeeBzGJf_WgRIfy227QcDbyoEXjhJZLxMgy2-SH7u5Aq0Vs4z-B6U0/2n1k655g6lfhzno/mysql84-community-release-el9-1.noarch.rpm)
+`sudo yum install plataforma-e-versão-especifica-nome-do-pacote.rpm`
 
-### Verificar se o reporitório MySQL Yum foi adicionado com êxito pelo seguinte comando
-`yum repolist enabled | grep "mysql.*-community.*"`
-### Seleção de uma série de lançamentos 
-`yum repolist all | grep mysql`
-### Para plataformas habilitadas com dnf
-`sudo dnf config-manager --disable mysql-8.4-lts-community`
+`sudo yum install mysql84-community-release-el9-1.noarch.rpm`
 
-`sudo dnf config-manager --disable mysql-tools-8.4-lts-community`
+b. Verificar se o repositório MySQL Yum foi adicionado com sucesso usando o comando a seguir.
+`yum repolist enabled | grep "mysql.*-community.*"` ou `dnf repolist enabled | grep "mysql.*-community.*"`
 
-`sudo dnf config-manager --enable mysql80-community`
+## Iniciando o MySQL
+a. Após a instalação bem-sucedida do MySQL, é hora de iniciar e habilitar o servidor MySQL com os seguintes comandos:
+`systemctl start mysqld`
 
-`sudo dnf config-manager --enable mysql-tools-community`
+`systemctl enable mysqld.service`
+b. Verificar o status do servidor
+`systemctl status mysqld.service` ou `service mysql status`
+c. Agora, finalmente, verifique a versão instalada do MySQL usando o seguinte comando.
+`mysql --version`
 
-### Verifique se o sub-repositórios foram habilitados corretamente
-`yum repolist enabled | grep mysql`
+### Protegendo a instalação do MySQL
+O comando mysql_secure_installation permite que você proteja sua instalação do MySQL executando configurações importantes, como definir a senha de root, remover usuários anônimos, remover login de root e assim por diante.
 
-## Instalando o MySQL
-### Execute o comando
-`sudo yum install mysql-community-server`
+Nota: O MySQL versão 8.0 ou superior gera uma senha aleatória temporária após a instalação./var/log/mysqld.log
 
+a. Use o comando abaixo para ver a senha antes de executar o comando seguro do MySQL.
+`grep 'temporary password' /var/log/mysqld.log`
+b. Depois de saber a senha, você pode executar o seguinte comando para proteger sua instalação do MySQL.
+`mysql_secure_installation`
 
+Nota: Digite a nova senha de root significa sua senha temporária de um arquivo ./var/log/mysqld.log
+
+### Conecte ao MySQL Server
+`mysql -u root -p`
+
+### Atualizando o MySQL com yum
+`yum update mysql-server` o u `dnf update mysql-serve`
 
 ## References
 [How to install the Apache Web Server on CentOS 7 | DigitalOcean](https://www.digitalocean.com/community/tutorials/how-to-install-the-apache-web-server-on-centos-7)
@@ -72,5 +81,4 @@ ou baixe do mediafire
 
 [How to install MySQL8.0 on RHEL/CentOS 8/7 and Fedora 35](https://www.tecmint.com/install-latest-mysql-on-rhel-centos-and-fedora/)
 
-[MySQL :: Manual de Referência do MySQL 8.0 :: 2.5.1 Instalando o MySQL no Linux usando o repositório MySQL Yum](https://dev.mysql.com/doc/refman/8.0/en/linux-installation-yum-repo.html)
-
+[How to install MySQL 8.0 on RHEL/CentOS 9/7 and Fedora 35](https://www.tecmint.com/install-latest-mysql-on-rhel-centos-and-fedora/)
